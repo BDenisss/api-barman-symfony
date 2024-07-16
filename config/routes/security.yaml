@@ -1,37 +1,5 @@
 _security_logout:
     resource: security.route_loader.logout
     type: service
+
     
-security:
-    encoders:
-        App\Entity\User:
-            algorithm: bcrypt
-
-    providers:
-        app_user_provider:
-            entity:
-                class: App\Entity\User
-                property: username
-
-    firewalls:
-        dev:
-            pattern: ^/(_(profiler|wdt)|css|images|js)/
-            security: false
-
-        main:
-            anonymous: true
-            lazy: true
-            provider: app_user_provider
-            form_login:
-                login_path: login
-                check_path: login
-            logout:
-                path: logout
-                target: /
-
-    access_control:
-        - { path: ^/api/admin, roles: ROLE_PATRON }
-        - { path: ^/api/barman, roles: ROLE_BARMAN }
-        - { path: ^/api/serveur, roles: ROLE_SERVEUR }
-        - { path: ^/api, roles: ROLE_CLIENT }
-
