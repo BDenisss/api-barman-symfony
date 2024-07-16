@@ -22,15 +22,6 @@ security:
             logout:
                 path: /logout
                 target: /
-        stateless: true
-        json_login:
-            check_path: auth 
-            username_path: email
-            password_path: password
-            success_handler: lexik_jwt_authentication.handler.authentication_success
-            failure_handler: lexik_jwt_authentication.handler.authentication_failure
-        jwt: ~
-
 
     access_control:
         - { path: ^/api/patron, roles: ROLE_PATRON }

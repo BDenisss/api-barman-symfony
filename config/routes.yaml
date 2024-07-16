@@ -5,10 +5,6 @@ controllers:
     type: attribute
 
 
-auth:
-    path: /api/auth
-    methods: ["POST"]
-
 commande_create:
     path: /api/serveur/commande
     controller: App\Controller\CommandeController::create
