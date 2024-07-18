@@ -19,11 +19,11 @@ use App\State\UserPasswordHasherProcessor;
 #[ORM\Entity(repositoryClass: BoissonRepository::class)]
 #[ApiResource(
     operations: [
-        new Get(processor: UserPasswordHasherProcessor::class, security: "is_granted('ROLE_BARMAN')"),
-        new GetCollection(processor: UserPasswordHasherProcessor::class, security: "is_granted('ROLE_BARMAN')"),
-        new Post(processor: UserPasswordHasherProcessor::class, security: "is_granted('ROLE_BARMAN')"),
-        new Put(processor: UserPasswordHasherProcessor::class, security: "is_granted('ROLE_BARMAN')"),
-        new Patch(processor: UserPasswordHasherProcessor::class, security: "is_granted('ROLE_BARMAN')"),
+        new Get(security: "is_granted('ROLE_BARMAN')"),
+        new GetCollection( security: "is_granted('ROLE_BARMAN')"),
+        new Post(security: "is_granted('ROLE_BARMAN')"),
+        new Put(security: "is_granted('ROLE_BARMAN')"),
+        new Patch( security: "is_granted('ROLE_BARMAN')"),
         new Delete(security: "is_granted('ROLE_BARMAN')"),
     ],
     normalizationContext: ['groups' => ['user:read']],

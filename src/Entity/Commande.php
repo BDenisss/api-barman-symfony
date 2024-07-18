@@ -21,11 +21,11 @@ use ApiPlatform\Metadata\Delete;
 #[ORM\Entity(repositoryClass: CommandeRepository::class)]
 #[ApiResource(
     operations: [
-        new Get(processor: UserPasswordHasherProcessor::class, security: "is_granted('ROLE_BARMAN') or is_granted('ROLE_SERVEUR')"),
-        new GetCollection(processor: UserPasswordHasherProcessor::class, security: "is_granted('ROLE_BARMAN')"),
-        new Post(processor: UserPasswordHasherProcessor::class, security: "is_granted('ROLE_SERVEUR')"),
+        new Get( security: "is_granted('ROLE_BARMAN') or is_granted('ROLE_SERVEUR')"),
+        new GetCollection( security: "is_granted('ROLE_BARMAN')"),
+        new Post(security: "is_granted('ROLE_SERVEUR')"),
         new Put(),
-        new Patch(processor: UserPasswordHasherProcessor::class, security: "is_granted('ROLE_BARMAN')"),
+        new Patch( security: "is_granted('ROLE_BARMAN')"),
         new Delete(),
     ],
     normalizationContext: ['groups' => ['user:read']],
