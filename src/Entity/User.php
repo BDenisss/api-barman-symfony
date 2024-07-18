@@ -27,7 +27,7 @@ use App\State\UserPasswordHasherProcessor;
         new Post(processor: UserPasswordHasherProcessor::class, security: "is_granted('ROLE_PATRON')"),
         new Put(processor: UserPasswordHasherProcessor::class, security: "is_granted('ROLE_PATRON')"),
         new Patch(processor: UserPasswordHasherProcessor::class, security: "is_granted('ROLE_PATRON')"),
-        new Delete(),
+        new Delete(processor: UserPasswordHasherProcessor::class, security: "is_granted('ROLE_PATRON')"),
     ],
 )]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
