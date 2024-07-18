@@ -1,0 +1,358 @@
+{
+	"info": {
+		"_postman_id": "29e8b9b0-4620-4a3d-bcfa-102e7a680d7b",
+		"name": "BAR",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "37021568",
+		"_collection_link": "https://iim111.postman.co/workspace/IIM-Workspace~751e3d64-cb6c-48fd-8a14-599764544f47/collection/37021568-29e8b9b0-4620-4a3d-bcfa-102e7a680d7b?action=share&source=collection_link&creator=37021568"
+	},
+	"item": [
+		{
+			"name": "Medias",
+			"item": [
+				{
+					"name": "Add Media",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/Users/crusix74/Desktop/Capture d’écran 2024-07-18 à 21.56.27.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://localhost:8000/api/medias",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"medias"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Commandes",
+			"item": []
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Connection user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"test2@gmail.com\",\n    \"password\": \"azerty\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8000/api/auth",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "SERVEUR",
+			"item": [
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "PATRON",
+			"item": [
+				{
+					"name": "Create Users",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE3MjEzMzExNjUsImV4cCI6MTcyMTMzNDc2NSwicm9sZXMiOlsiUk9MRV9QQVRST04iLCJST0xFX1VTRVIiXSwidXNlcm5hbWUiOiJhYWFhYS5iYXlzc2FjQGdtYWlsLmNvbSIsImZpcnN0bmFtZSI6Ik1Fcmxpc2gifQ.rwDgPY91moLzqTCLg44x7MBzLY8fLFB7zO9VsJg6jLp6Z7016smpt2oO3g_I3SxPkMp8zVw3lyUN3TtKmIVbLsQ8ELSKZuLTMlrLVGmZi25okdorHRVS8rVSavXxTtQriaT86LDxE9I6K5LO4hMUuSLwPKf17p73XdQsg_X36yZuLqSH1slrhJJUOaBSCuSnjdH5b4PIu4PCKRsHPoFDHjtNlJnn53s9XujnZy6iny60npVkpJURIWPEGTZNRUC1MuXiLFLfYGXX8orEiVmpMCiVFwMNfYThre54YBKuSDuAG4icapDKhQusDbaUTh9_YZyA31zRSbSKqP1Ija5Ppg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/ld+json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\" : \"denis.bayssac3@gmail.com\",\n    \"roles\": [\"ROLE_PATRON\"],\n    \"plainPassword\": \"azerty\",\n    \"firstname\": \"gtgtgtg\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8000/api/users",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"users"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Modifier un utilisateur",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE3MjEzMzA0NzAsImV4cCI6MTcyMTMzNDA3MCwicm9sZXMiOlsiUk9MRV9QQVRST04iLCJST0xFX1VTRVIiXSwidXNlcm5hbWUiOiJhYWFhYS5iYXlzc2FjQGdtYWlsLmNvbSIsImZpcnN0bmFtZSI6ImFhYWFhYSJ9.Khef2vTHEMW078clV_LsOdAJRLDZmZWoibbtgjR9ASQ1oX1hc3CEQRdR5BJ8LDX3rsQRgInVX2jw-bu9IG5Of-iaOvZ7-BxkLi-Ts0KyfeRX4UayTLjJEHeIAEPGA97sOb-s5cWCqCmzszBVSThlwLLvep-DS_gBa1ZonzoxXSCEdQpSaBi7RU2K87oKwb2O-8opjjMyl99GEFhkhOUGhkeBagYMm_7tZ7n_scB9z1VvGsIHTBsTWExitboQhhtXTXSB4Ty9dfUPHvoBXovrn1W3ImhtDj6ggMNxv-3K-AUgniIU2PcoEay9MSbAnvXltjzIWz1pYjsGT-mpbUVVhA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/merge-patch+json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstname\": \"Coline\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8000/api/users/11",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"users",
+								"11"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Tous les Users",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Retriever Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:8000/api/users/10",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"users",
+								"10"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Replace Users",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/ld+json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstname\": \"Coline\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8000/api/users/10",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"users",
+								"10"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Users",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:8000/api/users/10",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"users",
+								"10"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "BARMAN",
+			"item": [
+				{
+					"name": "Add Boissons",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/ld+json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": 1,\n  \"nom\": \"fanta\",\n  \"prix\": 5,\n  \"photo_id\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:8000/api/boissons",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"boissons"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retriever Boisson",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Replace Boisson",
+					"request": {
+						"method": "PUT",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Boisson",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Update Boisson",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
