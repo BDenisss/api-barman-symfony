@@ -13,7 +13,18 @@ use ApiPlatform\Metadata\ApiResource;
 
 
 #[ORM\Entity(repositoryClass: CommandeRepository::class)]
-#[ApiResource()]
+#[ApiResource(
+    operations: [
+        new Get(processor: UserPasswordHasherProcessor::class, security: "is_granted('ROLE_BARMAN') or is_granted('ROLE_SERVEUR')"),
+        new GetCollection(processor: UserPasswordHasherProcessor::class, security: "is_granted('ROLE_BARMAN')"),
+        new Post(processor: UserPasswordHasherProcessor::class, security: "is_granted('ROLE_SERVEUR')"),
+        new Put(),
+        new Patch(processor: UserPasswordHasherProcessor::class, security: "is_granted('ROLE_BARMAN')"),
+        new Delete(),
+    ],
+    normalizationContext: ['groups' => ['user:read']],
+    denormalizationContext: ['groups' => ['user:write']]
+)]
 
 class Commande
 {

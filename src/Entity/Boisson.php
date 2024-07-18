@@ -9,7 +9,18 @@ use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
 
 #[ORM\Entity(repositoryClass: BoissonRepository::class)]
-#[ApiResource(forceEager: false)]
+#[ApiResource(
+    operations: [
+        new Get(processor: UserPasswordHasherProcessor::class, security: "is_granted('ROLE_BARMAN')"),
+        new GetCollection(processor: UserPasswordHasherProcessor::class, security: "is_granted('ROLE_BARMAN')"),
+        new Post(processor: UserPasswordHasherProcessor::class, security: "is_granted('ROLE_BARMAN')"),
+        new Put(processor: UserPasswordHasherProcessor::class, security: "is_granted('ROLE_BARMAN')"),
+        new Patch(processor: UserPasswordHasherProcessor::class, security: "is_granted('ROLE_BARMAN')"),
+        new Delete(security: "is_granted('ROLE_BARMAN')"),
+    ],
+    normalizationContext: ['groups' => ['user:read']],
+    denormalizationContext: ['groups' => ['user:write']]
+)]
 
 class Boisson
 {
