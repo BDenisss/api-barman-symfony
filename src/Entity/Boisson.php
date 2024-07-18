@@ -7,26 +7,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Delete;
-use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\Patch;
-use ApiPlatform\Metadata\Post;
-use ApiPlatform\Metadata\Put;
 
 #[ORM\Entity(repositoryClass: BoissonRepository::class)]
-#[ApiResource(
-    normalizationContext: ['groups' => ['read']],
-    denormalizationContext: ['groups' => ['write']],
-    operations: [
-        new GetCollection(),
-        new Get(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_BOSS') or is_granted('ROLE_BARMAN') or is_granted('ROLE_WAITER')"),
-        new Post(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_BOSS') or is_granted('ROLE_BARMAN')"),
-        new Put(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_BOSS') or is_granted('ROLE_BARMAN')"),
-        new Patch(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_BOSS') or is_granted('ROLE_BARMAN')"),
-        new Delete(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_BOSS') or is_granted('ROLE_BARMAN')"),
-    ]
-)]
+#[ApiResource(forceEager: false)]
 
 class Boisson
 {
@@ -36,18 +19,18 @@ class Boisson
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $name = null;
+    private ?string $nom = null;
 
     #[ORM\Column]
-    private ?float $price = null;
+    private ?float $prix = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(inversedBy: 'boisson', cascade: ['persist', 'remove'])]
     private ?Media $photo = null;
 
     /**
      * @var Collection<int, Commande>
      */
-    #[ORM\ManyToMany(targetEntity: Commande::class, mappedBy: 'boissons')]
+    #[ORM\ManyToMany(targetEntity: Commande::class, mappedBy: 'listeBoissons')]
     private Collection $commandes;
 
     public function __construct()
@@ -60,26 +43,26 @@ class Boisson
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getNom(): ?string
     {
-        return $this->name;
+        return $this->nom;
     }
 
-    public function setName(string $name): static
+    public function setNom(string $nom): static
     {
-        $this->name = $name;
+        $this->nom = $nom;
 
         return $this;
     }
 
-    public function getPrice(): ?float
+    public function getPrix(): ?float
     {
-        return $this->price;
+        return $this->prix;
     }
 
-    public function setPrice(float $price): static
+    public function setPrix(float $prix): static
     {
-        $this->price = $price;
+        $this->prix = $prix;
 
         return $this;
     }
@@ -108,7 +91,7 @@ class Boisson
     {
         if (!$this->commandes->contains($commande)) {
             $this->commandes->add($commande);
-            $commande->addBoisson($this);
+            $commande->addListeBoisson($this);
         }
 
         return $this;
@@ -117,7 +100,7 @@ class Boisson
     public function removeCommande(Commande $commande): static
     {
         if ($this->commandes->removeElement($commande)) {
-            $commande->removeBoisson($this);
+            $commande->removeListeBoisson($this);
         }
 
         return $this;

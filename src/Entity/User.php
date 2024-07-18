@@ -2,67 +2,72 @@
 
 namespace App\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+use App\Repository\UserRepository;
 use ApiPlatform\Metadata\ApiResource;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Delete;
-use App\Repository\UserRepository;
 use App\State\UserPasswordHasherProcessor;
-use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Serializer\Attribute\Groups;
 
-#[ApiResource(
-    normalizationContext: ['groups' => ['read']],
-    denormalizationContext: ['groups' => ['write']],
-    operations: [
-        new GetCollection(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_BOSS')", securityMessage: 'You are not allowed to get users'),
-        new Post(processor: UserPasswordHasherProcessor::class),
-        new Get(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_BOSS') or object == user", securityMessage: 'You are not allowed to get this user'),
-        new Put(processor: UserPasswordHasherProcessor::class, security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_BOSS') or object == user", securityMessage: 'You are not allowed to edit this user'),
-        new Patch(processor: UserPasswordHasherProcessor::class, security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_BOSS') or object == user", securityMessage: 'You are not allowed to edit this user'),
-        new Delete(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_BOSS')", securityMessage: 'You are not allowed to delete this user'),
-    ]
-)]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ORM\Table(name: '`user`')]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
+#[ApiResource(
+    operations: [
+        new Get(),
+        new GetCollection(),
+        new Post(processor: UserPasswordHasherProcessor::class, security: "is_granted('ROLE_PATRON')"),
+        new Put(processor: UserPasswordHasherProcessor::class, security: "is_granted('ROLE_PATRON')"),
+        new Patch(processor: UserPasswordHasherProcessor::class, security: "is_granted('ROLE_PATRON')"),
+        new Delete(),
+    ],
+)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups('read')]
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
-    #[Groups(['read', 'write'])]
     private ?string $email = null;
 
     /**
      * @var list<string> The user roles
      */
     #[ORM\Column]
-    #[Groups(['read', 'write'])]
     private array $roles = [];
 
     /**
      * @var string The hashed password
      */
     #[ORM\Column]
-    // #[Groups(['read'])]
+    #[Groups('read')]
     private ?string $password = null;
 
     #[Groups('write')]
     private ?string $plainPassword = null;
 
-    #[ORM\Column(length: 100)]
-    #[Groups(['read', 'write'])]
-    private ?string $firstname = null;
+    /**
+     * @var Collection<int, Commande>
+     */
+    #[ORM\OneToMany(targetEntity: Commande::class, mappedBy: 'serveur')]
+    private Collection $commandes;
+
+
+
+    public function __construct()
+    {
+        $this->commandes = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -93,7 +98,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @see UserInterface
-     *
      * @return list<string>
      */
     public function getRoles(): array
@@ -130,36 +134,54 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function getPlainPassword(): string
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword(string $plainPassword): static
+    {
+        $this->plainPassword = $plainPassword;
+
+        return $this;
+    }
+
     /**
      * @see UserInterface
      */
     public function eraseCredentials(): void
     {
         // If you store any temporary, sensitive data on the user, clear it here
-        $this->plainPassword = null;
+        // $this->plainPassword = null;
     }
 
-    public function getFirstname(): ?string
+    /**
+     * @return Collection<int, Commande>
+     */
+    public function getCommandes(): Collection
     {
-        return $this->firstname;
+        return $this->commandes;
     }
 
-    public function setFirstname(string $firstname): static
+    public function addCommande(Commande $commande): static
     {
-        $this->firstname = $firstname;
+        if (!$this->commandes->contains($commande)) {
+            $this->commandes->add($commande);
+            $commande->setServeur($this);
+        }
 
         return $this;
     }
 
-    public function getPlainPassword(): string
+    public function removeCommande(Commande $commande): static
     {
-        return $this->plainPassword;
-    }
- 
-    public function setPlainPassword(string $plainPassword): static
-    {
-        $this->plainPassword = $plainPassword;
- 
+        if ($this->commandes->removeElement($commande)) {
+            // set the owning side to null (unless already changed)
+            if ($commande->getServeur() === $this) {
+                $commande->setServeur(null);
+            }
+        }
+
         return $this;
     }
 }

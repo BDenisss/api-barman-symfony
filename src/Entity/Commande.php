@@ -2,32 +2,19 @@
 
 namespace App\Entity;
 
+
 use App\Repository\CommandeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Delete;
-use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\Patch;
-use ApiPlatform\Metadata\Post;
-use ApiPlatform\Metadata\Put;
+
+
 
 #[ORM\Entity(repositoryClass: CommandeRepository::class)]
-#[ApiResource(
-    normalizationContext: ['groups' => ['read']],
-    denormalizationContext: ['groups' => ['write']],
-    operations: [
-        new GetCollection(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_BOSS') or is_granted('ROLE_BARMAN') or is_granted('ROLE_WAITER')"),
-        new Get(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_BOSS') or is_granted('ROLE_BARMAN') or is_granted('ROLE_WAITER')"),
-        new Post(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_BOSS') or is_granted('ROLE_BARMAN')"),
-        new Put(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_BOSS') or is_granted('ROLE_BARMAN')"),
-        new Patch(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_BOSS') or is_granted('ROLE_BARMAN')"),
-        new Delete(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_BOSS') or is_granted('ROLE_BARMAN')"),
-    ]
-)]
+#[ApiResource()]
+
 class Commande
 {
     #[ORM\Id]
@@ -36,10 +23,13 @@ class Commande
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $dateCreation = null;
+    private ?\DateTimeInterface $createdDate = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $status = null;
+    /**
+     * @var Collection<int, Boisson>
+     */
+    #[ORM\ManyToMany(targetEntity: Boisson::class, inversedBy: 'commandes')]
+    private Collection $listeBoissons;
 
     #[ORM\Column]
     private ?int $numeroTable = null;
@@ -50,15 +40,13 @@ class Commande
     #[ORM\ManyToOne(inversedBy: 'commandes')]
     private ?User $barman = null;
 
-    /**
-     * @var Collection<int, Boisson>
-     */
-    #[ORM\ManyToMany(targetEntity: Boisson::class, inversedBy: 'commandes')]
-    private Collection $boissons;
+    #[ORM\Column(length: 255)]
+    private ?string $status = null;
 
     public function __construct()
     {
-        $this->boissons = new ArrayCollection();
+        $this->listeBoissons = new ArrayCollection();
+        $this->createdDate = new \DateTime();
     }
 
     public function getId(): ?int
@@ -66,26 +54,38 @@ class Commande
         return $this->id;
     }
 
-    public function getDateCreation(): ?\DateTimeInterface
+    public function getCreatedDate(): ?\DateTimeInterface
     {
-        return $this->dateCreation;
+        return $this->createdDate;
     }
 
-    public function setDateCreation(\DateTimeInterface $dateCreation): static
+    public function setCreatedDate(\DateTimeInterface $createdDate): static
     {
-        $this->dateCreation = $dateCreation;
+        $this->createdDate = $createdDate;
 
         return $this;
     }
 
-    public function getStatus(): ?string
+    /**
+     * @return Collection<int, Boisson>
+     */
+    public function getListeBoissons(): Collection
     {
-        return $this->status;
+        return $this->listeBoissons;
     }
 
-    public function setStatus(string $status): static
+    public function addListeBoisson(Boisson $listeBoisson): static
     {
-        $this->status = $status;
+        if (!$this->listeBoissons->contains($listeBoisson)) {
+            $this->listeBoissons->add($listeBoisson);
+        }
+
+        return $this;
+    }
+
+    public function removeListeBoisson(Boisson $listeBoisson): static
+    {
+        $this->listeBoissons->removeElement($listeBoisson);
 
         return $this;
     }
@@ -126,26 +126,14 @@ class Commande
         return $this;
     }
 
-    /**
-     * @return Collection<int, Boisson>
-     */
-    public function getBoissons(): Collection
+    public function getStatus(): ?string
     {
-        return $this->boissons;
+        return $this->status;
     }
 
-    public function addBoisson(Boisson $boisson): static
+    public function setStatus(string $status): static
     {
-        if (!$this->boissons->contains($boisson)) {
-            $this->boissons->add($boisson);
-        }
-
-        return $this;
-    }
-
-    public function removeBoisson(Boisson $boisson): static
-    {
-        $this->boissons->removeElement($boisson);
+        $this->status = $status;
 
         return $this;
     }
