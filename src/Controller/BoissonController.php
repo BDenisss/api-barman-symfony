@@ -1,3 +1,5 @@
+<?php
+
 namespace App\Controller;
 
 use App\Entity\Boisson;
@@ -16,66 +18,67 @@ class BoissonController extends AbstractController
         $this->entityManager = $entityManager;
     }
 
-    /**
-     * @Route("/api/barman/boisson", methods={"POST"})
-     */
-    public function create(Request $request): JsonResponse
-    {
-        $data = json_decode($request->getContent(), true);
+    // /**
+    //  * @Route("/api/barman/boisson", methods={"POST"})
+    //  */
+    // public function create(Request $request): JsonResponse
+    // {
+    //     $data = json_decode($request->getContent(), true);
 
-        $boisson = new Boisson();
-        $boisson->setNom($data['nom']);
-        $boisson->setPrix($data['prix']);
-        // Ajouter le media si nécessaire...
+    //     $boisson = new Boisson();
+    //     $boisson->setNom($data['nom']);
+    //     $boisson->setPrix($data['prix']);
+    //     // Ajouter le media si nécessaire...
 
-        $this->entityManager->persist($boisson);
-        $this->entityManager->flush();
+    //     $this->entityManager->persist($boisson);
+    //     $this->entityManager->flush();
 
-        return new JsonResponse(['status' => 'Boisson créée'], JsonResponse::HTTP_CREATED);
-    }
+    //     return new JsonResponse(['status' => 'Boisson créée'], JsonResponse::HTTP_CREATED);
+    // }
 
-    /**
-     * @Route("/api/barman/boisson/{id}", methods={"PUT"})
-     */
-    public function update(Request $request, Boisson $boisson): JsonResponse
-    {
-        $data = json_decode($request->getContent(), true);
+    // /**
+    //  * @Route("/api/barman/boisson/{id}", methods={"PUT"})
+    //  */
+    // public function update(Request $request, Boisson $boisson): JsonResponse
+    // {
+    //     $data = json_decode($request->getContent(), true);
 
-        $boisson->setNom($data['nom']);
-        $boisson->setPrix($data['prix']);
-        // Mettre à jour le media si nécessaire...
+    //     $boisson->setNom($data['nom']);
+    //     $boisson->setPrix($data['prix']);
+    //     // Mettre à jour le media si nécessaire...
 
-        $this->entityManager->flush();
+    //     $this->entityManager->flush();
 
-        return new JsonResponse(['status' => 'Boisson mise à jour'], JsonResponse::HTTP_OK);
-    }
+    //     return new JsonResponse(['status' => 'Boisson mise à jour'], JsonResponse::HTTP_OK);
+    // }
 
-    /**
-     * @Route("/api/barman/boisson/{id}", methods={"DELETE"})
-     */
-    public function delete(Boisson $boisson): JsonResponse
-    {
-        $this->entityManager->remove($boisson);
-        $this->entityManager->flush();
+    // /**
+    //  * @Route("/api/barman/boisson/{id}", methods={"DELETE"})
+    //  */
+    // public function delete(Boisson $boisson): JsonResponse
+    // {
+    //     $this->entityManager->remove($boisson);
+    //     $this->entityManager->flush();
 
-        return new JsonResponse(['status' => 'Boisson supprimée'], JsonResponse::HTTP_OK);
-    }
+    //     return new JsonResponse(['status' => 'Boisson supprimée'], JsonResponse::HTTP_OK);
+    // }
 
-    /**
-     * @Route("/api/boissons", methods={"GET"})
-     */
-    public function list(): JsonResponse
-    {
-        $boissons = $this->getDoctrine()->getRepository(Boisson::class)->findAll();
+    // /**
+    //  * @Route("/api/boissons", methods={"GET"})
+    //  */
+    // public function list(): JsonResponse
+    // {
+    //     $boissons = $this->getDoctrine()->getRepository(Boisson::class)->findAll();
 
-        return $this->json($boissons);
-    }
+    //     return $this->json($boissons);
+    // }
 
-    /**
-     * @Route("/api/boisson/{id}", methods={"GET"})
-     */
-    public function detail(Boisson $boisson): JsonResponse
-    {
-        return $this->json($boisson);
-    }
+    // /**
+    //  * @Route("/api/boisson/{id}", methods={"GET"})
+    //  */
+    // public function detail(Boisson $boisson): JsonResponse
+    // {
+    //     return $this->json($boisson);
+    // }
 }
+

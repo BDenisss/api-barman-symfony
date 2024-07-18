@@ -1,91 +1,95 @@
-controllers:
-    resource:
-        path: ../src/Controller/
-        namespace: App\Controller
-    type: attribute
+# controllers:
+#     resource:
+#         path: ../src/Controller/
+#         namespace: App\Controller
+#     type: attribute
 
 
-commande_create:
-    path: /api/serveur/commande
-    controller: App\Controller\CommandeController::create
-    methods: POST
+# commande_create:
+#     path: /api/serveur/commande
+#     controller: App\Controller\CommandeController::create
+#     methods: POST
 
-commande_payer:
-    path: /api/client/commande/{id}/payer
-    controller: App\Controller\CommandeController::payerCommande
-    methods: POST
+# commande_payer:
+#     path: /api/client/commande/{id}/payer
+#     controller: App\Controller\CommandeController::payerCommande
+#     methods: POST
 
-commande_detail:
-    path: /api/serveur/commande/{id}
-    controller: App\Controller\CommandeController::getCommande
-    methods: GET
+# commande_detail:
+#     path: /api/serveur/commande/{id}
+#     controller: App\Controller\CommandeController::getCommande
+#     methods: GET
 
-commande_en_cours:
-    path: /api/barman/commandes
-    controller: App\Controller\CommandeController::getCommandesEnCours
-    methods: GET
+# commande_en_cours:
+#     path: /api/barman/commandes
+#     controller: App\Controller\CommandeController::getCommandesEnCours
+#     methods: GET
 
-commande_attribuer:
-    path: /api/barman/commande/{id}/attribuer
-    controller: App\Controller\CommandeController::attribuerCommande
-    methods: PUT
+# commande_attribuer:
+#     path: /api/barman/commande/{id}/attribuer
+#     controller: App\Controller\CommandeController::attribuerCommande
+#     methods: PUT
 
-commande_preparer:
-    path: /api/barman/commande/{id}/preparer
-    controller: App\Controller\CommandeController::preparerCommande
-    methods: PUT
+# commande_preparer:
+#     path: /api/barman/commande/{id}/preparer
+#     controller: App\Controller\CommandeController::preparerCommande
+#     methods: PUT
 
-commandes_list:
-    path: /api/commandes
-    controller: App\Controller\CommandeController::getCommandes
-    methods: GET
+# commandes_list:
+#     path: /api/commandes
+#     controller: App\Controller\CommandeController::getCommandes
+#     methods: GET
 
-boisson_create:
-    path: /api/barman/boisson
-    controller: App\Controller\BoissonController::create
-    methods: POST
+# boisson_create:
+#     path: /api/barman/boisson
+#     controller: App\Controller\BoissonController::create
+#     methods: POST
 
-boisson_update:
-    path: /api/barman/boisson/{id}
-    controller: App\Controller\BoissonController::update
-    methods: PUT
+# boisson_update:
+#     path: /api/barman/boisson/{id}
+#     controller: App\Controller\BoissonController::update
+#     methods: PUT
 
-boisson_delete:
-    path: /api/barman/boisson/{id}
-    controller: App\Controller\BoissonController::delete
-    methods: DELETE
+# boisson_delete:
+#     path: /api/barman/boisson/{id}
+#     controller: App\Controller\BoissonController::delete
+#     methods: DELETE
 
-boisson_list:
-    path: /api/boissons
-    controller: App\Controller\BoissonController::list
-    methods: GET
+# boisson_list:
+#     path: /api/boissons
+#     controller: App\Controller\BoissonController::list
+#     methods: GET
 
-boisson_detail:
-    path: /api/boisson/{id}
-    controller: App\Controller\BoissonController::detail
-    methods: GET
+# boisson_detail:
+#     path: /api/boisson/{id}
+#     controller: App\Controller\BoissonController::detail
+#     methods: GET
 
-user_create:
-    path: /api/patron/utilisateur
-    controller: App\Controller\UserController::create
-    methods: POST
+# user_create:
+#     path: /api/patron/utilisateur
+#     controller: App\Controller\UserController::create
+#     methods: POST
 
-user_list:
-    path: /api/patron/utilisateurs
-    controller: App\Controller\UserController::list
-    methods: GET
+# user_list:
+#     path: /api/patron/utilisateurs
+#     controller: App\Controller\UserController::list
+#     methods: GET
 
-user_detail:
-    path: /api/patron/utilisateur/{id}
-    controller: App\Controller\UserController::detail
-    methods: GET
+# user_detail:
+#     path: /api/patron/utilisateur/{id}
+#     controller: App\Controller\UserController::detail
+#     methods: GET
 
-user_update:
-    path: /api/patron/utilisateur/{id}
-    controller: App\Controller\UserController::update
-    methods: PUT
+# user_update:
+#     path: /api/patron/utilisateur/{id}
+#     controller: App\Controller\UserController::update
+#     methods: PUT
 
-user_delete:
-    path: /api/patron/utilisateur/{id}
-    controller: App\Controller\UserController::delete
-    methods: DELETE
+# user_delete:
+#     path: /api/patron/utilisateur/{id}
+#     controller: App\Controller\UserController::delete
+#     methods: DELETE
+
+auth:
+  path: /api/auth
+  methods: ["POST"]

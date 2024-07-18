@@ -2,57 +2,123 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Delete;
 use App\Repository\UserRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\State\UserPasswordHasherProcessor;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Attribute\Groups;
 
+#[ApiResource(
+    normalizationContext: ['groups' => ['read']],
+    denormalizationContext: ['groups' => ['write']],
+    operations: [
+        new GetCollection(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_BOSS')", securityMessage: 'You are not allowed to get users'),
+        new Post(processor: UserPasswordHasherProcessor::class),
+        new Get(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_BOSS') or object == user", securityMessage: 'You are not allowed to get this user'),
+        new Put(processor: UserPasswordHasherProcessor::class, security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_BOSS') or object == user", securityMessage: 'You are not allowed to edit this user'),
+        new Patch(processor: UserPasswordHasherProcessor::class, security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_BOSS') or object == user", securityMessage: 'You are not allowed to edit this user'),
+        new Delete(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_BOSS')", securityMessage: 'You are not allowed to delete this user'),
+    ]
+)]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User
+#[ORM\Table(name: '`user`')]
+#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups('read')]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $username = null;
+    #[ORM\Column(length: 180)]
+    #[Groups(['read', 'write'])]
+    private ?string $email = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $password = null;
-
+    /**
+     * @var list<string> The user roles
+     */
     #[ORM\Column]
+    #[Groups(['read', 'write'])]
     private array $roles = [];
 
     /**
-     * @var Collection<int, Commande>
+     * @var string The hashed password
      */
-    #[ORM\OneToMany(targetEntity: Commande::class, mappedBy: 'serveur')]
-    private Collection $commandes;
+    #[ORM\Column]
+    // #[Groups(['read'])]
+    private ?string $password = null;
 
-    public function __construct()
-    {
-        $this->commandes = new ArrayCollection();
-    }
+    #[Groups('write')]
+    private ?string $plainPassword = null;
+
+    #[ORM\Column(length: 100)]
+    #[Groups(['read', 'write'])]
+    private ?string $firstname = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getUsername(): ?string
+    public function getEmail(): ?string
     {
-        return $this->username;
+        return $this->email;
     }
 
-    public function setUsername(string $username): static
+    public function setEmail(string $email): static
     {
-        $this->username = $username;
+        $this->email = $email;
 
         return $this;
     }
 
-    public function getPassword(): ?string
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->email;
+    }
+
+    /**
+     * @see UserInterface
+     *
+     * @return list<string>
+     */
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    /**
+     * @param list<string> $roles
+     */
+    public function setRoles(array $roles): static
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    /**
+     * @see PasswordAuthenticatedUserInterface
+     */
+    public function getPassword(): string
     {
         return $this->password;
     }
@@ -64,49 +130,36 @@ class User
         return $this;
     }
 
-    public function getRoles(): array
-    {
-        $roles = $this->roles;
-        if (empty($roles)) {
-            $roles[] = 'ROLE_CLIENT';
-        }
-        return array_unique($roles);
-    }
-
-    public function setRoles(array $roles): static
-    {
-        $this->roles = $roles;
-
-        return $this;
-    }
-
     /**
-     * @return Collection<int, Commande>
+     * @see UserInterface
      */
-    public function getCommandes(): Collection
+    public function eraseCredentials(): void
     {
-        return $this->commandes;
+        // If you store any temporary, sensitive data on the user, clear it here
+        $this->plainPassword = null;
     }
 
-    public function addCommande(Commande $commande): static
+    public function getFirstname(): ?string
     {
-        if (!$this->commandes->contains($commande)) {
-            $this->commandes->add($commande);
-            $commande->setServeur($this);
-        }
+        return $this->firstname;
+    }
+
+    public function setFirstname(string $firstname): static
+    {
+        $this->firstname = $firstname;
 
         return $this;
     }
 
-    public function removeCommande(Commande $commande): static
+    public function getPlainPassword(): string
     {
-        if ($this->commandes->removeElement($commande)) {
-            // set the owning side to null (unless already changed)
-            if ($commande->getServeur() === $this) {
-                $commande->setServeur(null);
-            }
-        }
-
+        return $this->plainPassword;
+    }
+ 
+    public function setPlainPassword(string $plainPassword): static
+    {
+        $this->plainPassword = $plainPassword;
+ 
         return $this;
     }
 }
